@@ -1,0 +1,136 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+}
+
+.scanner {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 20px var(--accent-cyan);
+  animation: scan 2s infinite ease-in-out;
+  opacity: 0.3;
+}
+
+.title {
+  font-size: 1.25rem;
+  margin-bottom: 32px;
+  color: var(--text-primary);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.layer {
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-dim);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 99px;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 10px var(--accent-cyan);
+  transition: width 0.5s ease;
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0.3;
+  transition: all 0.3s ease;
+}
+
+.active {
+  opacity: 1;
+  transform: translateX(10px);
+}
+
+.completed {
+  opacity: 0.6;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.active .statusDot {
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.completed .statusDot {
+  background: var(--risk-low);
+}
+
+.stepLabel {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.check {
+  margin-left: auto;
+  color: var(--risk-low);
+  font-weight: 800;
+}
+
+.footerNote {
+  margin-top: 48px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  animation: pulse 2s infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(400px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

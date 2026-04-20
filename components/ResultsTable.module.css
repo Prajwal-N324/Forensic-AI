@@ -1,0 +1,88 @@
+.tableWrapper {
+  margin-top: 24px;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.table td {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+.entityName {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.entitySub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.blue { color: var(--accent-cyan); background: var(--accent-cyan-dim); }
+.green { color: var(--risk-low); background: var(--risk-low-dim); }
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.evidenceText {
+  color: var(--accent-cyan);
+  font-style: italic;
+  font-size: 0.95rem;
+  max-width: 400px;
+}
+
+.flag {
+  color: var(--risk-high);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--risk-high-dim);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--text-muted);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
