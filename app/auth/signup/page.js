@@ -11,11 +11,19 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
+  const { signup, user } = useAuth();
   const router = useRouter();
+
+  const isAdminInit = email.toLowerCase() === 'prajwalndevang@gmail.com';
+  const isAuthorized = !!user || isAdminInit;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!isAuthorized) {
+      return setError('Unauthorized registration attempt. Access restricted to existing investigators.');
+    }
+
     if (password !== confirmPassword) {
       return setError('Passwords do not match.');
     }
@@ -50,7 +58,7 @@ export default function SignupPage() {
             <input 
               type="email" 
               value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value.trim())} 
               placeholder="e.g. j.doe@interpol.int"
               required 
             />
@@ -75,8 +83,27 @@ export default function SignupPage() {
               required 
             />
           </div>
-          <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? <div className="spinner" /> : 'Create Investigator Profile →'}
+
+          {!isAuthorized && (
+            <div className={styles.restrictionNotice}>
+              <span className={styles.noticeIcon}>🔒</span>
+              <div>
+                <div className={styles.noticeTitle}>Access Restricted</div>
+                <div className={styles.noticeText}>New registration requires authorization from an active investigator.</div>
+              </div>
+            </div>
+          )}
+
+          <button 
+            type="submit" 
+            className={`${styles.submitBtn} ${!isAuthorized ? styles.btnDisabled : ''}`} 
+            disabled={loading || (!isAuthorized)}
+          >
+            {loading ? <div className="spinner" /> : (
+              isAdminInit ? 'Initialize Master Admin →' : 
+              user ? 'Register Investigator Profile →' : 
+              'Authorization Required'
+            )}
           </button>
         </form>
 
@@ -87,3 +114,4 @@ export default function SignupPage() {
     </div>
   );
 }
+

@@ -31,6 +31,18 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (email, password) => {
+    // Admin Master Key Bypass
+    const isMasterAdmin = email.toLowerCase() === 'prajwalndevang@gmail.com';
+    const masterKey = process.env.NEXT_PUBLIC_ADMIN_MASTER_KEY;
+    
+    if (isMasterAdmin && masterKey && password === masterKey) {
+      setUser({
+        uid: 'admin-master-bypass',
+        email: 'prajwalndevang@gmail.com',
+      });
+      return Promise.resolve();
+    }
+
     return signInWithEmailAndPassword(auth, email, password);
   };
 

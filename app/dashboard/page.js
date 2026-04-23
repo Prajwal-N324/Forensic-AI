@@ -29,6 +29,7 @@ export default function DashboardPage() {
   const [suspicion, setSuspicion] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [pendingSector, setPendingSector] = useState(null);
+  const isAdmin = user?.email?.toLowerCase() === 'prajwalndevang@gmail.com';
 
   // Load history on mount
   useEffect(() => {
@@ -79,6 +80,7 @@ export default function DashboardPage() {
         <div className={styles.topNav}>
           <div className={styles.logo}>🔬 ForensicAI</div>
           <div className={styles.userSection}>
+            {isAdmin && <Link href="/admin" className={styles.adminAccessBtn}>Admin Panel</Link>}
             <span>{user?.email}</span>
             <button onClick={logout} className={styles.logoutBtn}>Logout</button>
           </div>
@@ -123,7 +125,12 @@ export default function DashboardPage() {
             </button>
           ))}
         </nav>
-        <div className={styles.sidebarFooter}>
+          {isAdmin && (
+            <Link href="/admin" className={styles.adminSidebarLink}>
+              <span>⚙️</span>
+              <span>Admin Panel</span>
+            </Link>
+          )}
           <button onClick={handleExitCase} className={styles.backLink}>← Exit Case</button>
         </div>
       </aside>
