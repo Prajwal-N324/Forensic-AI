@@ -132,7 +132,6 @@ export default function DashboardPage() {
             </Link>
           )}
           <button onClick={handleExitCase} className={styles.backLink}>← Exit Case</button>
-        </div>
       </aside>
 
       {/* Main content */}
