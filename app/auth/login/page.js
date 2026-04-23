@@ -18,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      await login(email, password);
+      await login(email.trim(), password.trim());
       router.push('/dashboard');
     } catch (err) {
       setError('Invalid credentials. Access restricted to authorized investigators.');

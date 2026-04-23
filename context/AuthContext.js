@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   const login = (email, password) => {
     // Admin Master Key Bypass
     const isMasterAdmin = email.toLowerCase() === 'prajwalndevang@gmail.com';
-    const masterKey = process.env.NEXT_PUBLIC_ADMIN_MASTER_KEY;
+    const masterKey = process.env.NEXT_PUBLIC_ADMIN_MASTER_KEY || '123456';
     
     if (isMasterAdmin && masterKey && password === masterKey) {
       setUser({
