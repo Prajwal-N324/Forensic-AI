@@ -1,0 +1,110 @@
+{
+  "id": "project_aegis",
+  "name": "Case ProjectAegis: IP & Source Code Theft",
+  "description": "Investigation into an intellectual property breach at Aegis Corp. A senior developer is suspected of leaking proprietary autonomous driving source code to a foreign competitor via encrypted messaging apps.",
+  "status": "Active - Under Surveillance",
+  "investigator": "Cyber Investigator Dan Kowalski",
+  "dateCreated": "2026-05-12T10:30:00Z",
+  "metrics": {
+    "totalMessages": 8520,
+    "totalCalls": 18,
+    "flaggedContacts": 2,
+    "dataHealth": "Excellent (98%)",
+    "uploadedFiles": ["UFED_Physical_Dump_ElenaK.json", "Git_Access_Logs.csv"],
+    "filesCount": 312
+  },
+  "suspects": [
+    { "id": "elena_k", "name": "Elena Kovalenko", "phone": "+1 (555) 012-7744", "alias": "ekov_dev", "role": "Senior Developer / Suspected Leaker", "avatar": "👩‍💻" },
+    { "id": "rival_contact", "name": "Dr. Chen Wei", "phone": "+86 139 0102 9988", "alias": "wei_competitor", "role": "Rival R&D Director", "avatar": "👨‍💼" },
+    { "id": "git_bot", "name": "Aegis Git Server", "phone": "Internal IP", "alias": "GitLab-Aegis", "role": "Source Code Repository", "avatar": "🤖" }
+  ],
+  "anomalies": [
+    {
+      "id": "anom_aegis_1",
+      "risk": "High",
+      "category": "Keyword Flag",
+      "description": "Sent secure files named 'aegis_adas_v5.tar.gz' to unverified competitor phone number.",
+      "evidence": "Elena Kovalenko sent attachment 'aegis_adas_v5.tar.gz' (240MB) via WhatsApp to Dr. Chen Wei.",
+      "recommendation": "Extract media metadata from the database. Check company VPN logs for Git downloads preceding this time.",
+      "linkedEventId": "ev_aegis_4"
+    },
+    {
+      "id": "anom_aegis_2",
+      "risk": "Medium",
+      "category": "Location Match",
+      "description": "Elena Kovalenko pinged within 50 meters of the rival company's liaison office during non-work hours.",
+      "evidence": "GPS places Elena at 450 Broadway Ste 4 (Rival Corp Liaison Office) at 9:30 PM on a Friday.",
+      "recommendation": "Cross-reference with security logs to see if her work laptop connected to local public WiFi.",
+      "linkedEventId": "ev_aegis_7"
+    }
+  ],
+  "timeline": [
+    { "id": "ev_aegis_1", "timestamp": "2026-05-14T18:15:00Z", "type": "media", "actor": "Elena Kovalenko", "recipient": "Aegis Git Server", "content": "Downloaded repository: aegis-adas-core (branch: main)", "channel": "Git Logs", "severity": "Normal" },
+    { "id": "ev_aegis_2", "timestamp": "2026-05-14T18:22:00Z", "type": "chat", "actor": "Elena Kovalenko", "recipient": "Dr. Chen Wei", "content": "Got the latest update of the sensor fusion model. Packaging it now.", "channel": "Signal", "severity": "Suspicious" },
+    { "id": "ev_aegis_3", "timestamp": "2026-05-14T18:30:00Z", "type": "call", "actor": "Dr. Chen Wei", "recipient": "Elena Kovalenko", "content": "Call duration: 12m 45s", "channel": "WhatsApp Voice", "severity": "Suspicious" },
+    { "id": "ev_aegis_4", "timestamp": "2026-05-14T19:05:00Z", "type": "media", "actor": "Elena Kovalenko", "recipient": "Dr. Chen Wei", "content": "Sent file: 'aegis_adas_v5.tar.gz' (242 MB)", "channel": "WhatsApp", "severity": "Suspicious" },
+    { "id": "ev_aegis_5", "timestamp": "2026-05-14T19:08:00Z", "type": "chat", "actor": "Dr. Chen Wei", "recipient": "Elena Kovalenko", "content": "Received. Transferring funds to your offshore account. Delete these logs.", "channel": "Signal", "severity": "Suspicious" },
+    { "id": "ev_aegis_6", "timestamp": "2026-05-14T19:15:00Z", "type": "chat", "actor": "Elena Kovalenko", "recipient": "Dr. Chen Wei", "content": "Understood. Wiping local logs and key files.", "channel": "Signal", "severity": "Suspicious" },
+    { "id": "ev_aegis_7", "timestamp": "2026-05-15T21:30:00Z", "type": "location", "actor": "Elena Kovalenko", "recipient": "None", "content": "GPS Ping: (-122.4012, 37.7892) - 450 Broadway (Rival Liaison Office)", "channel": "GPS", "severity": "Suspicious" }
+  ],
+  "graph": {
+    "nodes": [
+      { "id": "Elena Kovalenko", "type": "suspect", "count": 6 },
+      { "id": "Dr. Chen Wei", "type": "flagged", "count": 5 },
+      { "id": "Aegis Git Server", "type": "associate", "count": 1 }
+    ],
+    "links": [
+      { "source": "Elena Kovalenko", "target": "Dr. Chen Wei", "value": 5, "type": "data_leak" },
+      { "source": "Elena Kovalenko", "target": "Aegis Git Server", "value": 1, "type": "git_access" },
+      { "source": "Dr. Chen Wei", "target": "Aegis Git Server", "value": 0, "type": "none" }
+    ]
+  },
+  "presets": [
+    {
+      "query": "Show files transferred by Elena to the competitor.",
+      "intent": "Identify file sharing/leakage events",
+      "translation": "SELECT filename, recipient, timestamp FROM media_logs WHERE actor = 'Elena Kovalenko' AND (filename LIKE '%.tar.gz%' OR filename LIKE '%.zip%')",
+      "summary": "The AI identified a file leakage event. On May 14 at 7:05 PM, Elena Kovalenko sent a compressed archive **'aegis_adas_v5.tar.gz'** (242 MB) to Dr. Chen Wei via WhatsApp, right after cloning the main repository from the internal Aegis Git Server.",
+      "sources": ["WhatsApp Attachment Tracker", "Git Logs"],
+      "confidence": 99,
+      "results": [
+        { "time": "2026-05-14 19:05", "from": "Elena Kovalenko", "to": "Dr. Chen Wei", "channel": "WhatsApp", "message": "Sent file: 'aegis_adas_v5.tar.gz' (242 MB)" }
+      ],
+      "suggestions": [
+        "Analyze Signal chat logs around the file transfer timestamp.",
+        "Check financial transactions / wire mentions."
+      ]
+    },
+    {
+      "query": "Search for instructions to wipe logs or delete chat history.",
+      "intent": "Detect anti-forensic activity / log wiping",
+      "translation": "SELECT * FROM chat_logs WHERE message LIKE '%delete%' OR message LIKE '%wipe%' OR message LIKE '%clear%'",
+      "summary": "Anti-forensic actions detected. On May 14 at 7:08 PM and 7:15 PM, chat messages between Dr. Chen Wei and Elena Kovalenko coordinate the wiping of local logs and critical source code files following the offshore transaction.",
+      "sources": ["Signal Chat History"],
+      "confidence": 96,
+      "results": [
+        { "time": "2026-05-14 19:08", "from": "Dr. Chen Wei", "to": "Elena Kovalenko", "channel": "Signal", "message": "Received. Transferring funds to your offshore account. Delete these logs." },
+        { "time": "2026-05-14 19:15", "from": "Elena Kovalenko", "to": "Dr. Chen Wei", "channel": "Signal", "message": "Understood. Wiping local logs and key files." }
+      ],
+      "suggestions": [
+        "Inspect file system for deleted db-wal files.",
+        "Correlate offshore wire transfer confirmations."
+      ]
+    },
+    {
+      "query": "Check location logs for Elena Kovalenko's off-work movements.",
+      "intent": "Trace suspect movement and co-location anomalies",
+      "translation": "SELECT timestamp, coordinates, content FROM location_logs WHERE actor = 'Elena Kovalenko' AND severity = 'Suspicious'",
+      "summary": "A suspicious location log on Friday, May 15 at 9:30 PM places Elena Kovalenko at **450 Broadway (Rival Liaison Office)**, correlating to the timing of the suspect IP theft campaign.",
+      "sources": ["GPS History", "Device Location Cache"],
+      "confidence": 92,
+      "results": [
+        { "time": "2026-05-15 21:30", "from": "Elena Kovalenko", "to": "GPS", "channel": "GPS", "message": "GPS Ping: (-122.4012, 37.7892) - 450 Broadway (Rival Liaison Office)" }
+      ],
+      "suggestions": [
+        "Query WiFi connection logs for public hotspots.",
+        "Analyze surveillance camera feeds around Broadway."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "id": "blue_lotus",
+  "name": "Case BlueLotus: Narcotics Coordination",
+  "description": "Investigation into a regional narcotics ring operating under the moniker BlueLotus. Chats show coded transactions involving street terms ('candy', 'wheels') with coordinate pings near public docks.",
+  "status": "Active - Gathering Evidence",
+  "investigator": "Detective Ray Miller",
+  "dateCreated": "2026-05-08T14:15:00Z",
+  "metrics": {
+    "totalMessages": 3410,
+    "totalCalls": 120,
+    "flaggedContacts": 5,
+    "dataHealth": "Fair (80%)",
+    "uploadedFiles": ["UFED_Physical_BlueLotus_Burner.json"],
+    "filesCount": 85
+  },
+  "suspects": [
+    { "id": "jake_flint", "name": "Jake Flint", "phone": "+1 (555) 018-4001", "alias": "Lotus_Lead", "role": "Lead Dealer", "avatar": "👤" },
+    { "id": "tommy_mule", "name": "Tommy Vance", "phone": "+1 (555) 011-2093", "alias": "Wheels", "role": "Mule / Delivery Courier", "avatar": "🏍️" },
+    { "id": "supplier_shadow", "name": "Unknown Supplier", "phone": "+1 (800) 091-8821", "alias": "Shadow_Supply", "role": "Wholesale Supplier", "avatar": "👥" }
+  ],
+  "anomalies": [
+    {
+      "id": "anom_lotus_1",
+      "risk": "High",
+      "category": "Coded Language",
+      "description": "Unusual frequency of words 'candy', 'wheels', and 'dock' in standard SMS logs.",
+      "evidence": "Jake: 'Drop the candy at the usual dock. Wheels is moving now.'",
+      "recommendation": "Categorize as drug drop coordination. Verify GPS coordinate in the text.",
+      "linkedEventId": "ev_lotus_3"
+    },
+    {
+      "id": "anom_lotus_2",
+      "risk": "High",
+      "category": "Location Match",
+      "description": "Delivery courier pinged at the exact warehouse coordinates specified in the text messages.",
+      "evidence": "Tommy's phone places him at Warehouse 14, Docks (coordinates -74.0121, 40.7022) at 11:15 PM.",
+      "recommendation": "Request search warrant for Warehouse 14 based on location correlation.",
+      "linkedEventId": "ev_lotus_5"
+    }
+  ],
+  "timeline": [
+    { "id": "ev_lotus_1", "timestamp": "2026-05-14T21:00:00Z", "type": "chat", "actor": "Unknown Supplier", "recipient": "Jake Flint", "content": "Shipment arrived at Dock 4. 20 crates. Move it fast.", "channel": "SMS", "severity": "Suspicious" },
+    { "id": "ev_lotus_2", "timestamp": "2026-05-14T21:15:00Z", "type": "call", "actor": "Jake Flint", "recipient": "Tommy Vance", "content": "Call duration: 1m 05s", "channel": "Cellular", "severity": "Normal" },
+    { "id": "ev_lotus_3", "timestamp": "2026-05-14T21:20:00Z", "type": "chat", "actor": "Jake Flint", "recipient": "Tommy Vance", "content": "Drop the candy at the usual dock. Wheels is moving now. Coordinates for warehouse: (-74.0121, 40.7022)", "channel": "SMS", "severity": "Suspicious" },
+    { "id": "ev_lotus_4", "timestamp": "2026-05-14T22:30:00Z", "type": "chat", "actor": "Tommy Vance", "recipient": "Jake Flint", "content": "Picked up. Driving to the drop location now.", "channel": "SMS", "severity": "Normal" },
+    { "id": "ev_lotus_5", "timestamp": "2026-05-14T23:15:00Z", "type": "location", "actor": "Tommy Vance", "recipient": "None", "content": "GPS Ping: (-74.0121, 40.7022) - Warehouse 14, Docks", "channel": "GPS", "severity": "Suspicious" },
+    { "id": "ev_lotus_6", "timestamp": "2026-05-14T23:20:00Z", "type": "chat", "actor": "Tommy Vance", "recipient": "Jake Flint", "content": "Delivery secured inside Warehouse 14. Locked.", "channel": "SMS", "severity": "Suspicious" }
+  ],
+  "graph": {
+    "nodes": [
+      { "id": "Jake Flint", "type": "suspect", "count": 4 },
+      { "id": "Tommy Vance", "type": "associate", "count": 4 },
+      { "id": "Unknown Supplier", "type": "flagged", "count": 1 }
+    ],
+    "links": [
+      { "source": "Jake Flint", "target": "Tommy Vance", "value": 3, "type": "coordination" },
+      { "source": "Unknown Supplier", target: "Jake Flint", value: 1, "type": "wholesale" },
+      { "source": "Unknown Supplier", target: "Tommy Vance", value: 0, "type": "none" }
+    ]
+  },
+  "presets": [
+    {
+      "query": "Search for drop instructions or locations at the docks.",
+      "intent": "Identify drop locations and courier instructions",
+      "translation": "SELECT * FROM chat_logs WHERE message LIKE '%dock%' OR message LIKE '%warehouse%' OR message LIKE '%coordinates%'",
+      "summary": "The AI highlighted a drop instruction sent by Jake Flint to Tommy Vance on May 14 at 9:20 PM: **'Drop the candy at the usual dock... Coordinates: (-74.0121, 40.7022)'**. This matches a subsequent GPS ping of Tommy Vance at that warehouse location at 11:15 PM.",
+      "sources": ["SMS", "GPS Logs"],
+      "confidence": 96,
+      "results": [
+        { "time": "2026-05-14 21:20", "from": "Jake Flint", "to": "Tommy Vance", "channel": "SMS", "message": "Drop the candy at the usual dock. Wheels is moving now. Coordinates for warehouse: (-74.0121, 40.7022)" },
+        { "time": "2026-05-14 23:15", "from": "Tommy Vance", "to": "GPS", "channel": "GPS", "message": "GPS Ping: (-74.0121, 40.7022) - Warehouse 14, Docks" }
+      ],
+      "suggestions": [
+        "Show all messages from courier Tommy Vance.",
+        "Check calls between Jake Flint and Tommy Vance around 9:15 PM."
+      ]
+    },
+    {
+      "query": "Identify references to delivery vehicles, couriers, or 'wheels'.",
+      "intent": "Identify logistical coordination and courier alias",
+      "translation": "SELECT * FROM chat_logs WHERE message LIKE '%wheels%' OR message LIKE '%mule%' OR message LIKE '%drive%'",
+      "summary": "Logistical courier coordination detected. Jake Flint contacts Tommy Vance (alias 'Wheels') on May 14 at 9:20 PM confirming courier deployment: **'Wheels is moving now'**.",
+      "sources": ["SMS Logs"],
+      "confidence": 94,
+      "results": [
+        { "time": "2026-05-14 21:20", "from": "Jake Flint", "to": "Tommy Vance", "channel": "SMS", "message": "Drop the candy at the usual dock. Wheels is moving now. Coordinates for warehouse: (-74.0121, 40.7022)" },
+        { "time": "2026-05-14 22:30", "from": "Tommy Vance", "to": "Jake Flint", "channel": "SMS", "message": "Picked up. Driving to the drop location now." }
+      ],
+      "suggestions": [
+        "Trace cellular tower registration for Tommy's device.",
+        "Check traffic camera logs near Dock 4."
+      ]
+    },
+    {
+      "query": "Show calls between Jake Flint and Tommy Vance.",
+      "intent": "Analyze phone call patterns",
+      "translation": "SELECT timestamp, actor, recipient, content FROM call_logs WHERE (actor = 'Jake Flint' AND recipient = 'Tommy Vance') OR (actor = 'Tommy Vance' AND recipient = 'Jake Flint')",
+      "summary": "Call activity correlated. Jake Flint calls Tommy Vance on May 14 at 9:15 PM (duration 1m 05s), immediately prior to sending the drop coordinates via SMS.",
+      "sources": ["Call Logs"],
+      "confidence": 98,
+      "results": [
+        { "time": "2026-05-14 21:15", "from": "Jake Flint", "to": "Tommy Vance", "channel": "Cellular", "message": "Call duration: 1m 05s" }
+      ],
+      "suggestions": [
+        "Compare call towers to verify if suspects were co-located.",
+        "Search other numbers contacted by Tommy Vance."
+      ]
+    }
+  ]
+}

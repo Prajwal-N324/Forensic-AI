@@ -1,0 +1,108 @@
+{
+  "id": "phish_hook",
+  "name": "Case PhishHook: Identity Theft Ring",
+  "description": "Investigation into a bulk phishing syndicate. The ring coordinates the distribution of malicious links spoofing major banks to harvest credentials and coordinates SIM-swap operations.",
+  "status": "Active - Alert Flagged",
+  "investigator": "Inspector Kyle Reese",
+  "dateCreated": "2026-05-15T09:00:00Z",
+  "metrics": {
+    "totalMessages": 15420,
+    "totalCalls": 89,
+    "flaggedContacts": 7,
+    "dataHealth": "Good (89%)",
+    "uploadedFiles": ["UFED_Bulk_SMS_Extract.json", "IP_Web_Server_Logs.csv"],
+    "filesCount": 520
+  },
+  "suspects": [
+    { "id": "ryan_cross", "name": "Ryan Cross", "phone": "+1 (555) 013-0948", "alias": "PhishBoss", "role": "Syndicate Leader / Web Dev", "avatar": "👤" },
+    { "id": "sim_swapper", "name": "Kelly Chen", "phone": "+1 (555) 017-4831", "alias": "SimSwap_Pro", "role": "Carrier Insider / Swapper", "avatar": "👩" },
+    { "id": "link_sender", "name": "Bulk Sender #5", "phone": "+1 (555) 016-0099", "alias": "Spoofer_Bot", "role": "Spoofer_Bot", "avatar": "🤖" }
+  ],
+  "anomalies": [
+    {
+      "id": "anom_phish_1",
+      "risk": "High",
+      "category": "Phishing URLs",
+      "description": "Sent bulk SMS templates containing domain lookalikes of Chase and Bank of America.",
+      "evidence": "Ryan: 'Send out the link: http://chase-login-verify-security.com now.'",
+      "recommendation": "Request domain takedown. Correlate with bulk spam sender server records.",
+      "linkedEventId": "ev_phish_2"
+    },
+    {
+      "id": "anom_phish_2",
+      "risk": "High",
+      "category": "SIM Swap Action",
+      "description": "Instruction sent to swap IMSI code of victim's phone immediately before high-value withdrawals.",
+      "evidence": "Kelly: 'Swap complete. BofA verification SMS should route to our burner now.'",
+      "recommendation": "Identify specific carrier logs for target IMSI change on May 16.",
+      "linkedEventId": "ev_phish_4"
+    }
+  ],
+  "timeline": [
+    { "id": "ev_phish_1", "timestamp": "2026-05-16T10:00:00Z", "type": "chat", "actor": "Ryan Cross", "recipient": "Bulk Sender #5", "content": "Spin up the login page clone. Make sure the database is logging passwords.", "channel": "Discord Mock", "severity": "Suspicious" },
+    { "id": "ev_phish_2", "timestamp": "2026-05-16T10:15:00Z", "type": "chat", "actor": "Ryan Cross", "recipient": "Bulk Sender #5", "content": "Send out the link: http://chase-login-verify-security.com now to list group 3.", "channel": "Discord Mock", "severity": "Suspicious" },
+    { "id": "ev_phish_3", "timestamp": "2026-05-16T12:30:00Z", "type": "chat", "actor": "Kelly Chen", "recipient": "Ryan Cross", "content": "Got target's details. Preparing SIM swap for Senator's account.", "channel": "Signal", "severity": "Suspicious" },
+    { "id": "ev_phish_4", "timestamp": "2026-05-16T13:45:00Z", "type": "chat", "actor": "Kelly Chen", "recipient": "Ryan Cross", "content": "Swap complete. BofA verification SMS should route to our burner now. Log in and withdraw.", "channel": "Signal", "severity": "Suspicious" },
+    { "id": "ev_phish_5", "timestamp": "2026-05-16T13:48:00Z", "type": "media", "actor": "Ryan Cross", "recipient": "None", "content": "Browser status: Connected to bank portal, OTP received and accepted.", "channel": "Browser Activity", "severity": "Suspicious" },
+    { "id": "ev_phish_6", "timestamp": "2026-05-16T14:15:00Z", "type": "call", "actor": "Ryan Cross", "recipient": "Kelly Chen", "content": "Call duration: 5m 12s", "channel": "WhatsApp Voice", "severity": "Normal" }
+  ],
+  "graph": {
+    "nodes": [
+      { "id": "Ryan Cross", "type": "suspect", "count": 4 },
+      { "id": "Kelly Chen", "type": "flagged", "count": 2 },
+      { "id": "Bulk Sender #5", "type": "associate", "count": 2 }
+    ],
+    "links": [
+      { "source": "Ryan Cross", "target": "Kelly Chen", "value": 3, "type": "swap_coordination" },
+      { "source": "Ryan Cross", "target": "Bulk Sender #5", value: 2, "type": "phishing_deploy" },
+      { "source": "Kelly Chen", target: "Bulk Sender #5", value: 0, "type": "none" }
+    ]
+  },
+  "presets": [
+    {
+      "query": "Identify phishing links or fake domains sent to victims.",
+      "intent": "Identify credential harvesting URLs",
+      "translation": "SELECT url, sender FROM message_logs WHERE message LIKE '%http%' AND (message LIKE '%login%' OR message LIKE '%security%' OR message LIKE '%verify%')",
+      "summary": "The AI highlighted a domain template sent by Ryan Cross to Bulk Sender #5 on May 16: **'http://chase-login-verify-security.com'**, which matches lookalike patterns of financial institutions commonly used for phishing.",
+      "sources": ["SMS Logs", "Internal Chat History"],
+      "confidence": 97,
+      "results": [
+        { "time": "2026-05-16 10:15", "from": "Ryan Cross", "to": "Bulk Sender #5", "channel": "Discord Mock", "message": "Send out the link: http://chase-login-verify-security.com now to list group 3." }
+      ],
+      "suggestions": [
+        "Check SIM swap logs on carrier systems for listed targets.",
+        "Find other IP hits on the phishing clone web server."
+      ]
+    },
+    {
+      "query": "Identify SIM swap instructions and carrier insider activity.",
+      "intent": "Detect unauthorized SIM swap operations",
+      "translation": "SELECT * FROM chat_logs WHERE message LIKE '%swap%' OR message LIKE '%IMSI%' OR message LIKE '%sim%'",
+      "summary": "SIM swap execution confirmed. Kelly Chen (SimSwap_Pro) messaged Ryan Cross on May 16 at 1:45 PM: **'Swap complete. BofA verification SMS should route to our burner now. Log in and withdraw.'**",
+      "sources": ["Signal Chats", "Carrier IMSI Logs"],
+      "confidence": 99,
+      "results": [
+        { "time": "2026-05-16 13:45", "from": "Kelly Chen", "to": "Ryan Cross", "channel": "Signal", "message": "Swap complete. BofA verification SMS should route to our burner now. Log in and withdraw." }
+      ],
+      "suggestions": [
+        "Check carrier employee login history for Kelly Chen.",
+        "Track IP address associated with BofA transaction."
+      ]
+    },
+    {
+      "query": "Trace Ryan Cross's browser activity and banking portal logins.",
+      "intent": "Audit suspect device web navigation logs",
+      "translation": "SELECT timestamp, actor, content FROM web_browser_logs WHERE actor = 'Ryan Cross' OR content LIKE '%bank%'",
+      "summary": "Illicit financial access logged. Browser activity shows Ryan Cross connected to the victim's banking portal at 1:48 PM, utilizing the diverted OTP.",
+      "sources": ["Browser History Extraction"],
+      "confidence": 95,
+      "results": [
+        { "time": "2026-05-16 13:48", "from": "Ryan Cross", "to": "None", "channel": "Browser Activity", "message": "Browser status: Connected to bank portal, OTP received and accepted." }
+      ],
+      "suggestions": [
+        "Extract session cookies from browser SQLite databases.",
+        "Trace routing IPs through Tor nodes or VPN gateways."
+      ]
+    }
+  ]
+}
