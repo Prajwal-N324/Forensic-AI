@@ -37,6 +37,7 @@ import { saveAuditLog, getAuditLogs } from "./firebase";
 import { analyzeForensicQuery, generateDetailedReport, chatWithAI, getScreenGuidance, isAIAvailable, aiModelsStatus, parseAndStructureCaseWithAI, getCasePresets, buildFallbackCustomCase } from "./ai-engine";
 import ForceGraph from "./ForceGraph";
 import "./App.css";
+import ThemeToggle from "./ThemeToggle";
 
 function App() {
   // Authentication State
@@ -631,6 +632,7 @@ function App() {
 
   return (
     <div className="app-container">
+      <ThemeToggle />
       {/* Sidebar Navigation */}
       <aside className="sidebar">
         <div>
