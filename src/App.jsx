@@ -775,6 +775,20 @@ function App() {
             </div>
           )}
 
+          {/* Fallback Placeholder when no case is loaded */}
+          {!activeCase && ["query", "timeline", "correlation", "suspicion", "report"].includes(activeScreen) && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "auto", minHeight: "450px", color: "var(--text-muted)", gap: "1rem", textAlign: "center", padding: "2rem", width: "100%" }}>
+              <Database size={48} style={{ opacity: 0.5, color: "var(--accent-blue)" }} />
+              <h3 style={{ color: "var(--text-primary)", fontWeight: 700 }}>No Active Forensic Case Loaded</h3>
+              <p style={{ maxWidth: "450px", fontSize: "0.95rem", lineHeight: 1.5 }}>
+                To view this screen, please upload a device extraction file or load a mock case study on the Dashboard.
+              </p>
+              <button className="auth-btn" style={{ padding: "0.5rem 1.2rem", fontSize: "0.85rem", marginTop: "0.5rem" }} onClick={() => setActiveScreen("dashboard")}>
+                Go to Command Center
+              </button>
+            </div>
+          )}
+
           {/* SCREEN 1: Dashboard Overview */}
           {activeScreen === "dashboard" && (
             activeCase ? (
@@ -1199,10 +1213,10 @@ function App() {
 
               <div className="panel-card">
                 <div className="panel-title-container">
-                  <h2 className="panel-title"><UserCheck size={18} /> Suspect Profile Directory ({activeCase.suspects.length})</h2>
+                  <h2 className="panel-title"><UserCheck size={18} /> Suspect Profile Directory ({activeCase?.suspects?.length || 0})</h2>
                 </div>
                 <div className="suspect-profiles-grid">
-                  {activeCase.suspects.map((suspect, idx) => (
+                  {activeCase?.suspects && activeCase.suspects.map((suspect, idx) => (
                     <div key={idx} className="suspect-card">
                       <div className="suspect-avatar">{suspect.avatar}</div>
                       <div className="suspect-info">
@@ -1219,7 +1233,7 @@ function App() {
           )}
 
           {/* SCREEN 3: AI Query Interface */}
-          {activeScreen === "query" && (
+          {activeScreen === "query" && activeCase && (
             <div className="query-interface-container">
               <div className="query-main-panel">
                 <div className="query-input-box">
@@ -1420,7 +1434,7 @@ function App() {
           )}
 
           {/* SCREEN 4: Evidence Timeline */}
-          {activeScreen === "timeline" && (
+          {activeScreen === "timeline" && activeCase && (
             <div className="timeline-container">
               <div className="timeline-filters">
                 <div className="filter-group">
@@ -1544,7 +1558,7 @@ function App() {
           )}
 
           {/* SCREEN 5: Correlation Map */}
-          {activeScreen === "correlation" && (
+          {activeScreen === "correlation" && activeCase && (
             <div className="graph-container">
               <div className="graph-canvas-card" style={{ padding: 0, overflow: "hidden" }}>
                 <ForceGraph 
@@ -1601,7 +1615,7 @@ function App() {
           )}
 
           {/* SCREEN 6: Suspicion & Anomalies */}
-          {activeScreen === "suspicion" && (
+          {activeScreen === "suspicion" && activeCase && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
               <div className="suspicion-panel-grid">
                 {activeCase.anomalies.map((anom, idx) => (
@@ -1636,7 +1650,7 @@ function App() {
           )}
 
           {/* SCREEN 7: Report Builder */}
-          {activeScreen === "report" && (
+          {activeScreen === "report" && activeCase && (
             <div className="report-builder-layout">
               <div className="report-editor-card">
                 <input 
