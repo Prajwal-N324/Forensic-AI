@@ -908,30 +908,6 @@ function App() {
                     </div>
                   </div>
                 </div>
-
-                {/* Graph Gallery */}
-                <div className="ai-graph-gallery">
-                  <div className="ai-graph-card">
-                    <img src="/ai-graphs/accuracy.png" alt="AI Model Accuracy Comparison" loading="lazy" />
-                    <span className="ai-graph-caption">Model Accuracy Comparison</span>
-                  </div>
-                  <div className="ai-graph-card">
-                    <img src="/ai-graphs/latency.png" alt="Response Latency & Throughput" loading="lazy" />
-                    <span className="ai-graph-caption">Response Latency & Throughput</span>
-                  </div>
-                  <div className="ai-graph-card">
-                    <img src="/ai-graphs/tokens.png" alt="Context Window & Token Capacity" loading="lazy" />
-                    <span className="ai-graph-caption">Context Window & Token Capacity</span>
-                  </div>
-                  <div className="ai-graph-card">
-                    <img src="/ai-graphs/specialization.png" alt="Task Specialization Matrix" loading="lazy" />
-                    <span className="ai-graph-caption">Task Specialization Matrix</span>
-                  </div>
-                  <div className="ai-graph-card full-width">
-                    <img src="/ai-graphs/architecture.png" alt="Multi-Model AI Pipeline Architecture" loading="lazy" />
-                    <span className="ai-graph-caption">Multi-Model AI Pipeline Architecture</span>
-                  </div>
-                </div>
               </div>
             </div>
           )}
