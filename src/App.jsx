@@ -83,6 +83,7 @@ function App() {
   // Audit & Notifications
   const [auditLogs, setAuditLogs] = useState([]);
   const [notification, setNotification] = useState(null);
+  const [showFlaggedModal, setShowFlaggedModal] = useState(false);
 
   // AI State
   const [isAIProcessing, setIsAIProcessing] = useState(false);
@@ -792,7 +793,12 @@ function App() {
                   </div>
                   <div className="stat-icon-wrapper"><Network size={24} /></div>
                 </div>
-                <div className="stat-card">
+                <div 
+                  className="stat-card clickable-stat" 
+                  onClick={() => setShowFlaggedModal(true)}
+                  style={{ cursor: "pointer" }}
+                  title="Click to view flagged contacts details"
+                >
                   <div className="stat-details">
                     <span className="stat-label">Flagged Contacts</span>
                     <span className="stat-val" style={{ color: "var(--accent-rose)" }}>{activeCase.metrics.flaggedContacts}</span>
@@ -1818,7 +1824,94 @@ function App() {
               </form>
             </div>
           )}
-        </>
+      {/* ═══ FLAGGED CONTACTS DETAILS MODAL ═══ */}
+      {showFlaggedModal && (
+        <div className="modal-overlay" onClick={() => setShowFlaggedModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <AlertTriangle className="modal-title-icon" size={20} style={{ color: "var(--accent-rose)" }} />
+                <h2 className="modal-title">Flagged Contacts Analysis</h2>
+              </div>
+              <button className="modal-close-btn" onClick={() => setShowFlaggedModal(false)}>
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="modal-case-info">
+              <span className="case-badge">ACTIVE CASE</span>
+              <span className="case-name">{activeCase.name}</span>
+            </div>
+
+            <div className="modal-body flagged-contacts-list">
+              {activeCase.flaggedContactsList && activeCase.flaggedContactsList.length > 0 ? (
+                activeCase.flaggedContactsList.map((contact, idx) => (
+                  <div key={idx} className="flagged-contact-card">
+                    <div className="contact-card-header">
+                      <div className="contact-avatar-wrapper">
+                        <span className="contact-avatar">{contact.avatar || "👤"}</span>
+                      </div>
+                      <div className="contact-meta">
+                        <div className="contact-name-row">
+                          <span className="contact-name">{contact.name}</span>
+                          {contact.alias && (
+                            <span className="contact-alias">({contact.alias})</span>
+                          )}
+                        </div>
+                        <span className="contact-phone">{contact.phone}</span>
+                      </div>
+                      <span className={`risk-badge ${contact.risk.toLowerCase()}`}>
+                        {contact.risk} Risk
+                      </span>
+                    </div>
+                    
+                    <div className="contact-card-body">
+                      <div className="contact-role-row">
+                        <span className="role-label">Role:</span>
+                        <span className="role-value">{contact.role}</span>
+                      </div>
+                      <div className="contact-reason-box">
+                        <span className="reason-label">Flagging Reason & Evidence:</span>
+                        <p className="reason-text">{contact.reason}</p>
+                      </div>
+                    </div>
+
+                    <div className="contact-card-actions">
+                      <button 
+                        className="contact-action-btn timeline"
+                        onClick={() => {
+                          setTimelineSearch(contact.name);
+                          setActiveScreen("timeline");
+                          setShowFlaggedModal(false);
+                          showNotification(`Filtering timeline for: ${contact.name}`, "info");
+                        }}
+                      >
+                        <Calendar size={12} />
+                        <span>Filter in Timeline</span>
+                      </button>
+                      
+                      <button 
+                        className="contact-action-btn query"
+                        onClick={() => {
+                          setChatOpen(true);
+                          setChatInput(`Tell me more about the contact ${contact.name} (${contact.alias}) and their role in the case.`);
+                          setShowFlaggedModal(false);
+                        }}
+                      >
+                        <Bot size={12} />
+                        <span>Ask AI Assistant</span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="no-flagged-contacts">
+                  <p>No flagged contacts data available for this case.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

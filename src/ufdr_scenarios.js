@@ -15,6 +15,44 @@ export const SCENARIOS = {
       uploadedFiles: ["Cellebrite_Export_UFED_4421.json", "SMS_Backup_Vance.xml"],
       filesCount: 124
     },
+    flaggedContactsList: [
+      {
+        name: "Marcus Vance",
+        alias: "V_Shepherd",
+        phone: "+1 (555) 019-2831",
+        role: "Lead Suspect / Extortion Coordinator",
+        risk: "High",
+        avatar: "👤",
+        reason: "Primary coordinator of extortion campaign. Demanded 12 BTC via WhatsApp and threatened senator."
+      },
+      {
+        name: "Elena Rostova",
+        alias: "RedRaven",
+        phone: "+1 (555) 014-9982",
+        role: "Financial Mule",
+        risk: "High",
+        avatar: "👩‍💼",
+        reason: "Coordinated local ATM cashout of illicit funds. GPS pings match Marcus Vance's location within 3 minutes."
+      },
+      {
+        name: "Unknown Burner #3",
+        alias: "Ghost_Operator",
+        phone: "+1 (555) 015-8831",
+        role: "Unverified Accomplice",
+        risk: "High",
+        avatar: "👥",
+        reason: "Burner contact utilized to coordinate clean coin distribution. Wiped Signal chat history immediately after transaction."
+      },
+      {
+        name: "Senator John Miller",
+        alias: "Target",
+        phone: "+1 (555) 012-4029",
+        role: "Victim / Target",
+        risk: "Low",
+        avatar: "🏛️",
+        reason: "Target of extortion campaign. Flagged due to receipt of ransom threats and direct outgoing payment confirmations."
+      }
+    ],
     suspects: [
       { id: "marcus_vance", name: "Marcus Vance", phone: "+1 (555) 019-2831", alias: "V_Shepherd", role: "Lead Suspect / Extortion Coordinator", avatar: "👤" },
       { id: "elena_rostova", name: "Elena Rostova", phone: "+1 (555) 014-9982", alias: "RedRaven", role: "Financial Mule", avatar: "👩‍💼" },
@@ -160,6 +198,26 @@ export const SCENARIOS = {
       uploadedFiles: ["UFED_Physical_Dump_ElenaK.json", "Git_Access_Logs.csv"],
       filesCount: 312
     },
+    flaggedContactsList: [
+      {
+        name: "Elena Kovalenko",
+        alias: "ekov_dev",
+        phone: "+1 (555) 012-7744",
+        role: "Senior Developer / Suspected Leaker",
+        risk: "High",
+        avatar: "👩‍💻",
+        reason: "Senior developer suspected of intellectual property theft. Downloaded company ADAS repo and shared archive via WhatsApp."
+      },
+      {
+        name: "Dr. Chen Wei",
+        alias: "wei_competitor",
+        phone: "+86 139 0102 9988",
+        role: "Rival R&D Director",
+        risk: "High",
+        avatar: "👨‍💼",
+        reason: "Recipient of leaked source code. Coordinated offshore wire transfer payment to Elena Kovalenko."
+      }
+    ],
     suspects: [
       { id: "elena_k", name: "Elena Kovalenko", phone: "+1 (555) 012-7744", alias: "ekov_dev", role: "Senior Developer / Suspected Leaker", avatar: "👩‍💻" },
       { id: "rival_contact", name: "Dr. Chen Wei", phone: "+86 139 0102 9988", alias: "wei_competitor", role: "Rival R&D Director", avatar: "👨‍💼" },
@@ -271,6 +329,53 @@ export const SCENARIOS = {
       uploadedFiles: ["UFED_Physical_BlueLotus_Burner.json"],
       filesCount: 85
     },
+    flaggedContactsList: [
+      {
+        name: "Jake Flint",
+        alias: "Lotus_Lead",
+        phone: "+1 (555) 018-4001",
+        role: "Lead Dealer",
+        risk: "High",
+        avatar: "👤",
+        reason: "Primary orchestrator. Sent coded instructions ('candy', 'wheels') to delivery couriers and shared drop coordinates."
+      },
+      {
+        name: "Tommy Vance",
+        alias: "Wheels",
+        phone: "+1 (555) 011-2093",
+        role: "Mule / Delivery Courier",
+        risk: "High",
+        avatar: "🏍️",
+        reason: "Delivery driver. Location pings matched the exact drop warehouse (Warehouse 14) at the coordinates specified in text messages."
+      },
+      {
+        name: "Unknown Supplier",
+        alias: "Shadow_Supply",
+        phone: "+1 (800) 091-8821",
+        role: "Wholesale Supplier",
+        risk: "High",
+        avatar: "👥",
+        reason: "Supplied narcotics cargo. Sent SMS alerts regarding arrival of 20 crates at Dock 4."
+      },
+      {
+        name: "Dock Master Burner",
+        alias: "Port_Contact",
+        phone: "+1 (555) 019-3382",
+        role: "Key Coordinator",
+        risk: "Medium",
+        avatar: "📞",
+        reason: "Suspicious frequent contact with supplier and delivery courier around shipment arrival timestamps."
+      },
+      {
+        name: "Associate \"Stretch\"",
+        alias: "Lookout_S",
+        phone: "+1 (555) 017-7721",
+        role: "Lookout / Guard",
+        risk: "Medium",
+        avatar: "🕶️",
+        reason: "Identified in group chats, suspected lookout near Warehouse 14 during drop window."
+      }
+    ],
     suspects: [
       { id: "jake_flint", name: "Jake Flint", phone: "+1 (555) 018-4001", alias: "Lotus_Lead", role: "Lead Dealer", avatar: "👤" },
       { id: "tommy_mule", name: "Tommy Vance", phone: "+1 (555) 011-2093", alias: "Wheels", role: "Mule / Delivery Courier", avatar: "🏍️" },
@@ -382,6 +487,71 @@ export const SCENARIOS = {
       uploadedFiles: ["UFED_Bulk_SMS_Extract.json", "IP_Web_Server_Logs.csv"],
       filesCount: 520
     },
+    flaggedContactsList: [
+      {
+        name: "Ryan Cross",
+        alias: "PhishBoss",
+        phone: "+1 (555) 013-0948",
+        role: "Syndicate Leader / Web Dev",
+        risk: "High",
+        avatar: "👤",
+        reason: "Orchestrated login page cloning, database collection of harvested credentials, and spam campaigns."
+      },
+      {
+        name: "Kelly Chen",
+        alias: "SimSwap_Pro",
+        phone: "+1 (555) 017-4831",
+        role: "Carrier Insider / Swapper",
+        risk: "High",
+        avatar: "👩",
+        reason: "Inside operator who executed unauthorized SIM swaps to redirect bank verification OTP codes."
+      },
+      {
+        name: "Bulk Sender #5",
+        alias: "Spoofer_Bot",
+        phone: "+1 (555) 016-0099",
+        role: "Spam Sender",
+        risk: "High",
+        avatar: "🤖",
+        reason: "Automated SMS sending bot. Blast-messaged phishing links to target victim lists."
+      },
+      {
+        name: "Mule Cashier \"Grizzly\"",
+        alias: "CashOut_1",
+        phone: "+1 (555) 014-4491",
+        role: "Mule Cashier",
+        risk: "High",
+        avatar: "💸",
+        reason: "Conducted physical ATM withdrawals using harvested bank credentials immediately following SIM swap events."
+      },
+      {
+        name: "Hosting Operator",
+        alias: "Server_Host",
+        phone: "+1 (555) 011-2299",
+        role: "Hosting Provider",
+        risk: "Medium",
+        avatar: "🖥️",
+        reason: "Configured fast-flux hosting and DNS records to route spoofed banking websites."
+      },
+      {
+        name: "Victim Contact A",
+        alias: "Harvested_T1",
+        phone: "+1 (555) 012-3029",
+        role: "Targeted Victim",
+        risk: "Low",
+        avatar: "👤",
+        reason: "Targeted victim line whose IMSI was swapped, resulting in an unauthorized $50,000 withdrawal."
+      },
+      {
+        name: "Victim Contact B",
+        alias: "Harvested_T2",
+        phone: "+1 (555) 012-7049",
+        role: "Targeted Victim",
+        risk: "Low",
+        avatar: "👤",
+        reason: "Target of credential harvesting campaign, flagged due to multiple incoming SMS containing phish templates."
+      }
+    ],
     suspects: [
       { id: "ryan_cross", name: "Ryan Cross", phone: "+1 (555) 013-0948", alias: "PhishBoss", role: "Syndicate Leader / Web Dev", avatar: "👤" },
       { id: "sim_swapper", name: "Kelly Chen", phone: "+1 (555) 017-4831", alias: "SimSwap_Pro", role: "Carrier Insider / Swapper", avatar: "👩" },
