@@ -1824,6 +1824,8 @@ function App() {
               </form>
             </div>
           )}
+        </>
+      )}
       {/* ═══ FLAGGED CONTACTS DETAILS MODAL ═══ */}
       {showFlaggedModal && (
         <div className="modal-overlay" onClick={() => setShowFlaggedModal(false)}>
