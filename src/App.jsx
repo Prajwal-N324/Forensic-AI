@@ -49,7 +49,7 @@ function App() {
   
   // Dashboard & Case State
   const [activeScreen, setActiveScreen] = useState("login");
-  const [currentCaseId, setCurrentCaseId] = useState("crypt_shepherd");
+  const [currentCaseId, setCurrentCaseId] = useState("");
   const [parsingStatus, setParsingStatus] = useState("idle");
   const [parsingProgress, setParsingProgress] = useState(0);
   const [customFiles, setCustomFiles] = useState([]);
@@ -657,39 +657,46 @@ function App() {
               <span>Case & Data Manager</span>
             </div>
             <div 
-              className={`menu-item ${activeScreen === "query" ? "active" : ""}`}
-              onClick={() => setActiveScreen("query")}
+              className={`menu-item ${activeScreen === "query" ? "active" : ""} ${!activeCase ? "disabled" : ""}`}
+              onClick={() => activeCase && setActiveScreen("query")}
+              title={!activeCase ? "Please load a case first" : ""}
             >
               <HelpCircle size={18} />
               <span>AI Query Interface</span>
             </div>
             <div 
-              className={`menu-item ${activeScreen === "timeline" ? "active" : ""}`}
-              onClick={() => setActiveScreen("timeline")}
+              className={`menu-item ${activeScreen === "timeline" ? "active" : ""} ${!activeCase ? "disabled" : ""}`}
+              onClick={() => activeCase && setActiveScreen("timeline")}
+              title={!activeCase ? "Please load a case first" : ""}
             >
               <Calendar size={18} />
               <span>Evidence Timeline</span>
             </div>
             <div 
-              className={`menu-item ${activeScreen === "correlation" ? "active" : ""}`}
+              className={`menu-item ${activeScreen === "correlation" ? "active" : ""} ${!activeCase ? "disabled" : ""}`}
               onClick={() => {
-                setActiveScreen("correlation");
-                setSelectedNode(null);
+                if (activeCase) {
+                  setActiveScreen("correlation");
+                  setSelectedNode(null);
+                }
               }}
+              title={!activeCase ? "Please load a case first" : ""}
             >
               <Network size={18} />
               <span>Correlation Map</span>
             </div>
             <div 
-              className={`menu-item ${activeScreen === "suspicion" ? "active" : ""}`}
-              onClick={() => setActiveScreen("suspicion")}
+              className={`menu-item ${activeScreen === "suspicion" ? "active" : ""} ${!activeCase ? "disabled" : ""}`}
+              onClick={() => activeCase && setActiveScreen("suspicion")}
+              title={!activeCase ? "Please load a case first" : ""}
             >
               <AlertTriangle size={18} />
               <span>Suspicion & Anomalies</span>
             </div>
             <div 
-              className={`menu-item ${activeScreen === "report" ? "active" : ""}`}
-              onClick={() => setActiveScreen("report")}
+              className={`menu-item ${activeScreen === "report" ? "active" : ""} ${!activeCase ? "disabled" : ""}`}
+              onClick={() => activeCase && setActiveScreen("report")}
+              title={!activeCase ? "Please load a case first" : ""}
             >
               <FileText size={18} />
               <span>Report Builder</span>
@@ -726,6 +733,7 @@ function App() {
                 value={currentCaseId} 
                 onChange={(e) => setCurrentCaseId(e.target.value)}
               >
+                <option value="" disabled>Select active case...</option>
                 <option value="crypt_shepherd">CryptShepherd (Cyber Extortion)</option>
                 <option value="project_aegis">ProjectAegis (Insider Threat)</option>
                 <option value="blue_lotus">BlueLotus (Narcotics Ring)</option>
@@ -769,147 +777,301 @@ function App() {
 
           {/* SCREEN 1: Dashboard Overview */}
           {activeScreen === "dashboard" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-              <div className="alert-strip">
-                <span className="alert-message">
-                  <AlertCircle size={16} style={{ color: "var(--accent-rose)" }} />
-                  CRITICAL: 2 new suspicion anomalies detected in {activeCase.name}. Immediate review recommended.
-                </span>
-                <button className="alert-btn" onClick={() => setActiveScreen("suspicion")}>Investigate</button>
-              </div>
+            activeCase ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                <div className="alert-strip">
+                  <span className="alert-message">
+                    <AlertCircle size={16} style={{ color: "var(--accent-rose)" }} />
+                    CRITICAL: 2 new suspicion anomalies detected in {activeCase.name}. Immediate review recommended.
+                  </span>
+                  <button className="alert-btn" onClick={() => setActiveScreen("suspicion")}>Investigate</button>
+                </div>
 
-              <div className="dashboard-grid">
-                <div className="stat-card">
-                  <div className="stat-details">
-                    <span className="stat-label">Total Messages</span>
-                    <span className="stat-val">{activeCase.metrics.totalMessages.toLocaleString()}</span>
+                <div className="dashboard-grid">
+                  <div className="stat-card">
+                    <div className="stat-details">
+                      <span className="stat-label">Total Messages</span>
+                      <span className="stat-val">{activeCase.metrics.totalMessages.toLocaleString()}</span>
+                    </div>
+                    <div className="stat-icon-wrapper"><Database size={24} /></div>
                   </div>
-                  <div className="stat-icon-wrapper"><Database size={24} /></div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-details">
-                    <span className="stat-label">Total Calls</span>
-                    <span className="stat-val">{activeCase.metrics.totalCalls}</span>
+                  <div className="stat-card">
+                    <div className="stat-details">
+                      <span className="stat-label">Total Calls</span>
+                      <span className="stat-val">{activeCase.metrics.totalCalls}</span>
+                    </div>
+                    <div className="stat-icon-wrapper"><Network size={24} /></div>
                   </div>
-                  <div className="stat-icon-wrapper"><Network size={24} /></div>
-                </div>
-                <div 
-                  className="stat-card clickable-stat" 
-                  onClick={() => setShowFlaggedModal(true)}
-                  style={{ cursor: "pointer" }}
-                  title="Click to view flagged contacts details"
-                >
-                  <div className="stat-details">
-                    <span className="stat-label">Flagged Contacts</span>
-                    <span className="stat-val" style={{ color: "var(--accent-rose)" }}>{activeCase.metrics.flaggedContacts}</span>
+                  <div 
+                    className="stat-card clickable-stat" 
+                    onClick={() => setShowFlaggedModal(true)}
+                    style={{ cursor: "pointer" }}
+                    title="Click to view flagged contacts details"
+                  >
+                    <div className="stat-details">
+                      <span className="stat-label">Flagged Contacts</span>
+                      <span className="stat-val" style={{ color: "var(--accent-rose)" }}>{activeCase.metrics.flaggedContacts}</span>
+                    </div>
+                    <div className="stat-icon-wrapper" style={{ backgroundColor: "rgba(244, 63, 94, 0.1)", color: "var(--accent-rose)" }}><AlertTriangle size={24} /></div>
                   </div>
-                  <div className="stat-icon-wrapper" style={{ backgroundColor: "rgba(244, 63, 94, 0.1)", color: "var(--accent-rose)" }}><AlertTriangle size={24} /></div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-details">
-                    <span className="stat-label">Data Health</span>
-                    <span className="stat-val" style={{ color: "var(--accent-emerald)" }}>{activeCase.metrics.dataHealth}</span>
+                  <div className="stat-card">
+                    <div className="stat-details">
+                      <span className="stat-label">Data Health</span>
+                      <span className="stat-val" style={{ color: "var(--accent-emerald)" }}>{activeCase.metrics.dataHealth}</span>
+                    </div>
+                    <div className="stat-icon-wrapper" style={{ backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--accent-emerald)" }}><CheckCircle2 size={24} /></div>
                   </div>
-                  <div className="stat-icon-wrapper" style={{ backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--accent-emerald)" }}><CheckCircle2 size={24} /></div>
                 </div>
-              </div>
 
-              <div className="dashboard-row-2">
-                <div className="panel-card">
-                  <div className="panel-title-container">
-                    <h2 className="panel-title"><Shield size={18} /> Active Case Overview</h2>
-                    <span className="status-badge" style={{ backgroundColor: "rgba(59, 130, 246, 0.1)", borderColor: "var(--accent-blue)", color: "var(--accent-blue)" }}>{activeCase.status}</span>
+                <div className="dashboard-row-2">
+                  <div className="panel-card">
+                    <div className="panel-title-container">
+                      <h2 className="panel-title"><Shield size={18} /> Active Case Overview</h2>
+                      <span className="status-badge" style={{ backgroundColor: "rgba(59, 130, 246, 0.1)", borderColor: "var(--accent-blue)", color: "var(--accent-blue)" }}>{activeCase.status}</span>
+                    </div>
+                    <div className="panel-body" style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.6 }}>
+                      <p style={{ marginBottom: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>{activeCase.name}</p>
+                      <p style={{ marginBottom: "1.5rem" }}>{activeCase.description}</p>
+                      
+                      <h3 style={{ fontSize: "0.85rem", color: "var(--text-primary)", textTransform: "uppercase", marginBottom: "0.5rem" }}>Active UFED Source Materials</h3>
+                      <div style={{ display: "flex", gap: "0.75rem" }}>
+                        {activeCase.metrics.uploadedFiles.concat(customFiles).map((file, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.4rem 0.6rem", background: "var(--bg-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.75rem" }}>
+                            <FileText size={12} style={{ color: "var(--accent-blue)" }} />
+                            <span>{file}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="panel-body" style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.6 }}>
-                    <p style={{ marginBottom: "1rem", color: "var(--text-primary)", fontWeight: 600 }}>{activeCase.name}</p>
-                    <p style={{ marginBottom: "1.5rem" }}>{activeCase.description}</p>
-                    
-                    <h3 style={{ fontSize: "0.85rem", color: "var(--text-primary)", textTransform: "uppercase", marginBottom: "0.5rem" }}>Active UFED Source Materials</h3>
-                    <div style={{ display: "flex", gap: "0.75rem" }}>
-                      {activeCase.metrics.uploadedFiles.concat(customFiles).map((file, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.35rem", padding: "0.4rem 0.6rem", background: "var(--bg-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.75rem" }}>
-                          <FileText size={12} style={{ color: "var(--accent-blue)" }} />
-                          <span>{file}</span>
+
+                  <div className="panel-card">
+                    <div className="panel-title-container">
+                      <h2 className="panel-title"><AlertTriangle size={18} style={{ color: "var(--accent-rose)" }} /> Recent Incidents</h2>
+                    </div>
+                    <div className="panel-body" style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                      {activeCase.anomalies.map((anom, idx) => (
+                        <div 
+                          key={idx} 
+                          style={{ padding: "0.75rem", borderLeft: `3px solid ${anom.risk === 'High' ? 'var(--accent-rose)' : 'var(--accent-amber)'}`, backgroundColor: "var(--bg-primary)", borderRadius: "4px", cursor: "pointer" }}
+                          onClick={() => jumpToTimelineEvent(anom.linkedEventId)}
+                        >
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem" }}>
+                            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: anom.risk === 'High' ? 'var(--accent-rose)' : 'var(--accent-amber)' }}>{anom.risk} RISK</span>
+                            <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{anom.category}</span>
+                          </div>
+                          <p style={{ fontSize: "0.8rem", color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{anom.description}</p>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
 
+                {/* AI Model Performance Analytics */}
                 <div className="panel-card">
                   <div className="panel-title-container">
-                    <h2 className="panel-title"><AlertTriangle size={18} style={{ color: "var(--accent-rose)" }} /> Recent Incidents</h2>
+                    <h2 className="panel-title"><Sparkles size={18} style={{ color: "var(--accent-cyan)" }} /> AI Model Performance Analytics</h2>
+                    <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
+                      {Object.values(aiModelsStatus).map((m, i) => (
+                        <span key={i} className={`model-dot ${m.available ? "online" : "offline"}`} title={`${m.model} — ${m.available ? "Online" : "Offline"}`} />
+                      ))}
+                      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginLeft: "0.25rem" }}>
+                        {Object.values(aiModelsStatus).filter(m => m.available).length}/3 Models Active
+                      </span>
+                    </div>
                   </div>
-                  <div className="panel-body" style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                    {activeCase.anomalies.map((anom, idx) => (
-                      <div 
-                        key={idx} 
-                        style={{ padding: "0.75rem", borderLeft: `3px solid ${anom.risk === 'High' ? 'var(--accent-rose)' : 'var(--accent-amber)'}`, backgroundColor: "var(--bg-primary)", borderRadius: "4px", cursor: "pointer" }}
-                        onClick={() => jumpToTimelineEvent(anom.linkedEventId)}
-                      >
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.25rem" }}>
-                          <span style={{ fontSize: "0.7rem", fontWeight: 700, color: anom.risk === 'High' ? 'var(--accent-rose)' : 'var(--accent-amber)' }}>{anom.risk} RISK</span>
-                          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{anom.category}</span>
-                        </div>
-                        <p style={{ fontSize: "0.8rem", color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{anom.description}</p>
+
+                  {/* Model Cards */}
+                  <div className="ai-model-cards-grid">
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-cyan)" }} />
+                        <strong>Gemini 2.5 Flash</strong>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Model Performance Analytics */}
-              <div className="panel-card">
-                <div className="panel-title-container">
-                  <h2 className="panel-title"><Sparkles size={18} style={{ color: "var(--accent-cyan)" }} /> AI Model Performance Analytics</h2>
-                  <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
-                    {Object.values(aiModelsStatus).map((m, i) => (
-                      <span key={i} className={`model-dot ${m.available ? "online" : "offline"}`} title={`${m.model} — ${m.available ? "Online" : "Offline"}`} />
-                    ))}
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginLeft: "0.25rem" }}>
-                      {Object.values(aiModelsStatus).filter(m => m.available).length}/3 Models Active
-                    </span>
-                  </div>
-                </div>
-
-                {/* Model Cards */}
-                <div className="ai-model-cards-grid">
-                  <div className="ai-model-stat-card">
-                    <div className="ai-model-stat-header">
-                      <span className="ai-model-stat-dot" style={{ background: "var(--accent-cyan)" }} />
-                      <strong>Gemini 2.5 Flash</strong>
+                      <span className="ai-model-stat-role">Deep Analysis & Reports</span>
+                      <div className="ai-model-stat-specs">
+                        <span>1M token context</span>
+                        <span>{aiModelsStatus.gemini.available ? "● Online" : "○ Offline"}</span>
+                      </div>
                     </div>
-                    <span className="ai-model-stat-role">Deep Analysis & Reports</span>
-                    <div className="ai-model-stat-specs">
-                      <span>1M token context</span>
-                      <span>{aiModelsStatus.gemini.available ? "● Online" : "○ Offline"}</span>
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-purple, #a855f7)" }} />
+                        <strong>Llama 3.3 70B</strong>
+                      </div>
+                      <span className="ai-model-stat-role">AI Chatbot (Groq)</span>
+                      <div className="ai-model-stat-specs">
+                        <span>131K tokens • 300+ tok/s</span>
+                        <span>{aiModelsStatus.groqChat.available ? "● Online" : "○ Offline"}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="ai-model-stat-card">
-                    <div className="ai-model-stat-header">
-                      <span className="ai-model-stat-dot" style={{ background: "var(--accent-purple, #a855f7)" }} />
-                      <strong>Llama 3.3 70B</strong>
-                    </div>
-                    <span className="ai-model-stat-role">AI Chatbot (Groq)</span>
-                    <div className="ai-model-stat-specs">
-                      <span>131K tokens • 300+ tok/s</span>
-                      <span>{aiModelsStatus.groqChat.available ? "● Online" : "○ Offline"}</span>
-                    </div>
-                  </div>
-                  <div className="ai-model-stat-card">
-                    <div className="ai-model-stat-header">
-                      <span className="ai-model-stat-dot" style={{ background: "var(--accent-amber)" }} />
-                      <strong>Llama 3.1 8B</strong>
-                    </div>
-                    <span className="ai-model-stat-role">Screen Guidance (Groq)</span>
-                    <div className="ai-model-stat-specs">
-                      <span>131K tokens • Ultra-Fast</span>
-                      <span>{aiModelsStatus.groqGuide.available ? "● Online" : "○ Offline"}</span>
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-amber)" }} />
+                        <strong>Llama 3.1 8B</strong>
+                      </div>
+                      <span className="ai-model-stat-role">Screen Guidance (Groq)</span>
+                      <div className="ai-model-stat-specs">
+                        <span>131K tokens • Ultra-Fast</span>
+                        <span>{aiModelsStatus.groqGuide.available ? "● Online" : "○ Offline"}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                {/* Welcome Card */}
+                <div className="panel-card" style={{ background: "linear-gradient(135deg, var(--bg-secondary), rgba(59, 130, 246, 0.05))", borderLeft: "4px solid var(--accent-blue)" }}>
+                  <div className="panel-body" style={{ padding: "2rem" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+                      <Shield size={32} style={{ color: "var(--accent-blue)", filter: "drop-shadow(var(--glow-blue))" }} />
+                      <h1 style={{ fontSize: "1.5rem", fontWeight: 800, margin: 0 }}>ForensicAI Command Center</h1>
+                    </div>
+                    <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.6, maxWidth: "750px", marginBottom: "1.5rem" }}>
+                      Welcome to the secure forensic intelligence interface. To start parsing metadata, detecting anomalies, mapping correlations, and generating official investigation reports, you must first load a case study or import raw extraction files.
+                    </p>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <button className="alert-btn" style={{ padding: "0.6rem 1.2rem", background: "var(--accent-blue)", color: "#fff" }} onClick={() => setActiveScreen("case_manager")}>
+                        <Upload size={14} style={{ marginRight: "0.5rem" }} /> Go to File Uploader
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dashboard Options Grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+                  
+                  {/* Option 1: Load Case Presets */}
+                  <div className="panel-card">
+                    <div className="panel-title-container">
+                      <h2 className="panel-title"><Database size={18} style={{ color: "var(--accent-cyan)" }} /> Load Mock Case Study</h2>
+                    </div>
+                    <div className="panel-body" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
+                        Select one of the pre-loaded crime scenes below to scan and populate the intelligence graphs immediately:
+                      </p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        {Object.keys(cases).map((key) => {
+                          const sc = cases[key];
+                          return (
+                            <div 
+                              key={key} 
+                              className="quick-scenario-chip" 
+                              style={{ width: "100%", justifyContent: "space-between", padding: "0.6rem 0.8rem", cursor: "pointer" }}
+                              onClick={() => {
+                                setCurrentCaseId(key);
+                                logAction("Case Loaded", `Forensic dataset for '${sc.name}' active state established.`);
+                                showNotification(`Loaded ${sc.name} case preset successfully.`, "success");
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                <FileText size={14} style={{ color: "var(--accent-blue)" }} />
+                                <span style={{ fontWeight: 600, fontSize: "0.85rem" }}>{sc.name.split(":")[0]}</span>
+                              </div>
+                              <span className="chip-action-pill" style={{ background: "rgba(59, 130, 246, 0.15)", color: "var(--accent-blue)", border: "1px solid var(--accent-blue)" }}>Load Case</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Option 2: Upload Raw Extraction */}
+                  <div className="panel-card">
+                    <div className="panel-title-container">
+                      <h2 className="panel-title"><Upload size={18} style={{ color: "var(--accent-purple, #a855f7)" }} /> Fast-Parse Extraction</h2>
+                    </div>
+                    <div className="panel-body" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
+                        Drag and drop Cellebrite UFED XML/JSON or cellular tower logs directly here to begin:
+                      </p>
+                      <div 
+                        className="upload-zone" 
+                        style={{ padding: "1.5rem", minHeight: "130px" }}
+                        onClick={() => setActiveScreen("case_manager")}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.classList.add("dragover");
+                        }}
+                        onDragLeave={(e) => {
+                          e.currentTarget.classList.remove("dragover");
+                        }}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          e.currentTarget.classList.remove("dragover");
+                          const caseId = e.dataTransfer.getData("caseId");
+                          const fileName = e.dataTransfer.getData("fileName");
+                          if (caseId && cases[caseId]) {
+                            analyzeCaseFile(caseId, fileName);
+                          } else {
+                            const file = e.dataTransfer.files[0];
+                            if (file) {
+                              parseRealFile(file);
+                            }
+                          }
+                        }}
+                      >
+                        <Upload size={24} className="upload-icon" style={{ marginBottom: "0.5rem" }} />
+                        <p style={{ fontSize: "0.75rem", fontWeight: 600, margin: 0, textAlign: "center" }}>Click or drop files to upload & parse</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* AI Model Status */}
+                <div className="panel-card">
+                  <div className="panel-title-container">
+                    <h2 className="panel-title"><Sparkles size={18} style={{ color: "var(--accent-cyan)" }} /> AI Co-Processor Node Status</h2>
+                    <div style={{ display: "flex", gap: "0.35rem", alignItems: "center" }}>
+                      {Object.values(aiModelsStatus).map((m, i) => (
+                        <span key={i} className={`model-dot ${m.available ? "online" : "offline"}`} title={`${m.model} — ${m.available ? "Online" : "Offline"}`} />
+                      ))}
+                      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginLeft: "0.25rem" }}>
+                        {Object.values(aiModelsStatus).filter(m => m.available).length}/3 Models Active
+                      </span>
+                    </div>
+                  </div>
+                  <div className="ai-model-cards-grid">
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-cyan)" }} />
+                        <strong>Gemini 2.5 Flash</strong>
+                      </div>
+                      <span className="ai-model-stat-role">Deep Analysis & Reports</span>
+                      <div className="ai-model-stat-specs">
+                        <span>1M token context</span>
+                        <span>{aiModelsStatus.gemini.available ? "● Online" : "○ Offline"}</span>
+                      </div>
+                    </div>
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-purple, #a855f7)" }} />
+                        <strong>Llama 3.3 70B</strong>
+                      </div>
+                      <span className="ai-model-stat-role">AI Chatbot (Groq)</span>
+                      <div className="ai-model-stat-specs">
+                        <span>131K tokens • 300+ tok/s</span>
+                        <span>{aiModelsStatus.groqChat.available ? "● Online" : "○ Offline"}</span>
+                      </div>
+                    </div>
+                    <div className="ai-model-stat-card">
+                      <div className="ai-model-stat-header">
+                        <span className="ai-model-stat-dot" style={{ background: "var(--accent-amber)" }} />
+                        <strong>Llama 3.1 8B</strong>
+                      </div>
+                      <span className="ai-model-stat-role">Screen Guidance (Groq)</span>
+                      <div className="ai-model-stat-specs">
+                        <span>131K tokens • Ultra-Fast</span>
+                        <span>{aiModelsStatus.groqGuide.available ? "● Online" : "○ Offline"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            )
           )}
 
           {/* SCREEN 2: Case & Data Manager */}
